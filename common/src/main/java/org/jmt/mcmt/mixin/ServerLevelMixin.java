@@ -22,6 +22,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 
 /**
@@ -61,6 +62,14 @@ public abstract class ServerLevelMixin {
 	private void mcmt$runBlockEvents(Operation<Void> original) {
 		synchronized (mcmt$blockEventLock) {
 			original.call();
+		}
+	}
+
+	/** POI bookkeeping is not thread-safe; block changes come from every worker (1.18 {@code ServerWorldOnBlockStateChange}). */
+	@WrapMethod(method = "onBlockStateChange")
+	private void mcmt$onBlockStateChange(BlockPos pos, BlockState oldState, BlockState newState, Operation<Void> original) {
+		synchronized (mcmt$blockEventLock) {
+			original.call(pos, oldState, newState);
 		}
 	}
 

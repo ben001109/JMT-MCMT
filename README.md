@@ -18,11 +18,11 @@ required.
 
 ## Status
 
-Phase 2 complete: level ticks and entity ticks run on the MCMT worker pool
-on both loaders, with the concurrent chunk cache and thread-safe entity
-storage in place. The headless smoke test (200 entities, 60 s) passes on
-Fabric and NeoForge. Block entity and environment ticks (phase 3) and the
-remaining collection replacements (phase 4) are not parallelised yet.
+Phase 3 complete: level, entity, block entity and environment ticks run on the
+MCMT worker pool on both loaders, with the concurrent chunk cache and
+thread-safe entity/block-entity storage in place. The headless smoke test
+(200 entities plus block entities, 60 s) passes on Fabric and NeoForge.
+Environment ticks only run near players, so they are not exercised headless yet.
 
 Known limitations at this stage: only tested headless with no players; mod
 compatibility untested.

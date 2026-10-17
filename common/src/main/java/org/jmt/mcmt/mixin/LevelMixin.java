@@ -9,7 +9,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.jmt.mcmt.ParallelProcessor;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.util.RandomSource;
@@ -38,5 +40,12 @@ public abstract class LevelMixin {
 		this.random = RandomSource.createThreadSafe();
 		this.blockEntityTickers = Collections.synchronizedList(new ArrayList<>(this.blockEntityTickers));
 		this.pendingBlockEntityTickers = Collections.synchronizedList(new ArrayList<>(this.pendingBlockEntityTickers));
+	}
+
+	/** Replaces {@code teparallel.js}: block entity ticks go to the worker pool. */
+	@Redirect(method = "tickBlockEntities",
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/TickingBlockEntity;tick()V"))
+	private void mcmt$tickBlockEntity(TickingBlockEntity ticker) {
+		ParallelProcessor.callBlockEntityTick(ticker, (Level) (Object) this);
 	}
 }

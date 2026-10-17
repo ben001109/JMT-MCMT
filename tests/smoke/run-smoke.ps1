@@ -95,4 +95,5 @@ if (-not $tasks) { Fail 'no task counters in output' }
 Add-Content $Report $tasks.Matches[0].Value
 if ([int]$tasks.Matches[0].Groups[1].Value -le 0) { Fail 'no level ticks ran on the worker pool' }
 if ([int]$tasks.Matches[0].Groups[2].Value -le 0) { Fail 'no entity ticks ran on the worker pool' }
+if ([int]$tasks.Matches[0].Groups[3].Value -le 0) { Fail 'no block entity ticks ran on the worker pool' }
 Add-Content $Report 'PASS'; Write-Host 'PASS'

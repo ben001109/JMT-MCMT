@@ -233,9 +233,11 @@ public final class ParallelProcessor {
 			currentTEs.incrementAndGet();
 			totalTEs.incrementAndGet();
 			try {
-				ISerDesFilter filter = SerDesRegistry.getFilter(SerDesHookTypes.TETick, ticker.getClass());
+				// Since 1.17 the ticker is a LevelChunk wrapper; filters are keyed by the block entity class.
+				Object target = unwrapBlockEntity(ticker);
+				ISerDesFilter filter = SerDesRegistry.getFilter(SerDesHookTypes.TETick, target.getClass());
 				if (filter != null) {
-					filter.serialise(ticker::tick, ticker, ticker.getPos(), level, SerDesHookTypes.TETick);
+					filter.serialise(ticker::tick, target, ticker.getPos(), level, SerDesHookTypes.TETick);
 				} else {
 					ticker.tick();
 				}
@@ -259,6 +261,21 @@ public final class ParallelProcessor {
 				currentEnvs.decrementAndGet();
 			}
 		});
+	}
+
+	/** Follows LevelChunk's wrapper chain down to the BlockEntity, or returns the ticker itself. */
+	public static Object unwrapBlockEntity(TickingBlockEntity ticker) {
+		Object current = ticker;
+		for (int depth = 0; depth < 4; depth++) {
+			if (current instanceof org.jmt.mcmt.mixin.RebindableTickingBlockEntityWrapperAccessor w) {
+				current = w.mcmt$getTicker();
+			} else if (current instanceof org.jmt.mcmt.mixin.BoundTickingBlockEntityAccessor b) {
+				return b.mcmt$getBlockEntity();
+			} else {
+				break;
+			}
+		}
+		return current == null ? ticker : current;
 	}
 
 	public static boolean shouldThreadChunks() {

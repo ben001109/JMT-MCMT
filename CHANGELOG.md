@@ -20,4 +20,12 @@
   `PersistentEntitySectionManager`, `ChunkMap.entityMap`, `EntityTickList`)
   and for `Level.random`, replacing the `sync-fu` fastutil transformer.
 - `/mcmt stats` prints cumulative parallel task counts.
-- Block entity and environment ticks are still sequential (phase 3).
+- Phase 3: block entity ticks (`Level.tickBlockEntities`) and per-chunk
+  environment ticks (`ServerChunkCache.tickChunks`) run on the worker pool.
+  SerDes filters key on the real `BlockEntity` class behind the 1.17+ ticker
+  wrappers; `TETick` now targets `BlockEntity`.
+- Vanilla's `ThreadingDetector` (PalettedContainer, LegacyRandomSource) is a
+  real reentrant lock instead of a crash.
+- Thread-safe `ChunkAccess.blockEntities`, `LevelChunk.tickersInLevel`,
+  `ChunkHolder` change tracking, `LevelTicks` scheduling and
+  `ServerLevel.onBlockStateChange`.

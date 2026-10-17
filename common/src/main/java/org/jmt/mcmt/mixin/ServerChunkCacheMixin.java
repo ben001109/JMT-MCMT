@@ -17,6 +17,7 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 
 import net.minecraft.server.level.ServerChunkCache;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -106,6 +107,13 @@ public abstract class ServerChunkCacheMixin {
 		}
 		mcmt$cache.store(pos, result, ChunkStatus.FULL);
 		return result;
+	}
+
+	/** Replaces {@code envparallel.js}: per-chunk environment ticks (random ticks, weather) go to the pool. */
+	@Redirect(method = "tickChunks",
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;tickChunk(Lnet/minecraft/world/level/chunk/LevelChunk;I)V"))
+	private void mcmt$tickChunk(ServerLevel level, LevelChunk chunk, int randomTickSpeed) {
+		ParallelProcessor.callTickEnvironment(level, chunk, randomTickSpeed);
 	}
 
 	/** The chunk source tick is serialised against worker-thread chunk loads (1.18 {@code SCPTick}). */

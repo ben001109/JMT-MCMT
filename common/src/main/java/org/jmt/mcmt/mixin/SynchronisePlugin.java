@@ -19,7 +19,8 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 public final class SynchronisePlugin implements IMixinConfigPlugin {
 
 	private static final Set<String> SYNCHRONISE_ALL = Set.of(
-			"org.jmt.mcmt.mixin.EntityTickListMixin"
+			"org.jmt.mcmt.mixin.EntityTickListMixin",
+			"org.jmt.mcmt.mixin.LevelTicksMixin"
 	);
 
 	private static final int POSITIVE = Opcodes.ACC_PUBLIC;

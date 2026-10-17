@@ -6,17 +6,24 @@
   "refmap": "${mod_id}.refmap.json",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "BoundTickingBlockEntityAccessor",
+    "ChunkAccessMixin",
+    "ChunkHolderMixin",
+    "ChunkMapMixin",
     "ClassInstanceMultiMapMixin",
     "EntityLookupMixin",
     "EntitySectionStorageMixin",
     "EntityTickListMixin",
+    "LevelChunkMixin",
     "LevelMixin",
+    "LevelTicksMixin",
     "MinecraftServerMixin",
     "PersistentEntitySectionManagerMixin",
-    "ChunkMapMixin",
+    "RebindableTickingBlockEntityWrapperAccessor",
     "ServerChunkCacheInvoker",
     "ServerChunkCacheMixin",
-    "ServerLevelMixin"
+    "ServerLevelMixin",
+    "ThreadingDetectorMixin"
   ],
   "server": [],
   "injectors": {
