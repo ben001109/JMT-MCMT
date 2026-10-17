@@ -4,6 +4,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.jmt.mcmt.ParallelProcessor;
+import org.jmt.mcmt.duck.ServerLevelLocks;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -30,12 +31,17 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
  * {@code ServerWorldCollections} coremod (collections touched from worker threads).
  */
 @Mixin(ServerLevel.class)
-public abstract class ServerLevelMixin {
+public abstract class ServerLevelMixin implements ServerLevelLocks {
 
 	@Shadow @Final @Mutable Set<Mob> navigatingMobs;
 
 	@Unique private final Object mcmt$blockEventLock = new Object();
 	@Unique private final Object mcmt$blockUpdateLock = new Object();
+
+	@Override
+	public Object mcmt$blockUpdateLock() {
+		return mcmt$blockUpdateLock;
+	}
 
 	@Redirect(method = "tickNonPassenger",
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;tick()V"))

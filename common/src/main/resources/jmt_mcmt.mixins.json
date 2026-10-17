@@ -12,6 +12,7 @@
     "ChunkMapMixin",
     "ClassInstanceMultiMapMixin",
     "CollectingNeighborUpdaterAccessor",
+    "EntityCallbacksMixin",
     "EntityLookupMixin",
     "EntityMixin",
     "EntitySectionStorageMixin",
