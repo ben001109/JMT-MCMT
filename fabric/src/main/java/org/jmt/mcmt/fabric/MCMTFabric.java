@@ -9,15 +9,15 @@ import org.jmt.mcmt.MCMTCommon;
 import org.jmt.mcmt.commands.ConfigCommand;
 import org.jmt.mcmt.config.MCMTConfig;
 
-import net.fabricmc.api.DedicatedServerModInitializer;
+import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 
-public class MCMTFabric implements DedicatedServerModInitializer {
+public class MCMTFabric implements ModInitializer {
 
 	@Override
-	public void onInitializeServer() {
+	public void onInitialize() {
 		FabricConfigStore store = new FabricConfigStore(
 				FabricLoader.getInstance().getConfigDir().resolve(Constants.MOD_ID + "-common.toml"));
 		store.writeDefaultsIfMissing(defaults());

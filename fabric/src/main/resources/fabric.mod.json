@@ -11,9 +11,9 @@
     "issues": "https://github.com/ben001109/JMT-MCMT/issues"
   },
   "license": "${license}",
-  "environment": "server",
+  "environment": "*",
   "entrypoints": {
-    "server": ["org.jmt.mcmt.fabric.MCMTFabric"]
+    "main": ["org.jmt.mcmt.fabric.MCMTFabric"]
   },
   "mixins": [
     "${mod_id}.mixins.json"

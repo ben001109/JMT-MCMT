@@ -35,6 +35,10 @@ public class StatsCommand {
 				sb.append(" TE:").append(mean(maxTEs, liveValues));
 				sb.append(" Env:").append(mean(maxEnvs, liveValues)).append(')');
 				ConfigCommand.success(ctx, sb.toString());
+				ConfigCommand.success(ctx, "Parallel tasks since start: World:" + ParallelProcessor.totalWorlds.get()
+						+ " Entity:" + ParallelProcessor.totalEnts.get()
+						+ " TE:" + ParallelProcessor.totalTEs.get()
+						+ " Env:" + ParallelProcessor.totalEnvs.get());
 				return 1;
 			})
 			.then(Commands.literal("toggle").requires(src -> src.hasPermission(2)).executes(ctx -> {

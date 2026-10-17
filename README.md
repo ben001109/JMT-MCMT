@@ -18,10 +18,14 @@ required.
 
 ## Status
 
-Phase 1 (skeleton): the mod loads on both loaders, config and `/mcmt`
-commands work, the thread pool starts. No parallelisation hooks are active
-yet; those arrive in phase 2 (world + entity), phase 3 (block entity +
-environment) and phase 4 (chunk cache).
+Phase 2 complete: level ticks and entity ticks run on the MCMT worker pool
+on both loaders, with the concurrent chunk cache and thread-safe entity
+storage in place. The headless smoke test (200 entities, 60 s) passes on
+Fabric and NeoForge. Block entity and environment ticks (phase 3) and the
+remaining collection replacements (phase 4) are not parallelised yet.
+
+Known limitations at this stage: only tested headless with no players; mod
+compatibility untested.
 
 ## Tests
 

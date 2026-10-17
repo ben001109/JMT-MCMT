@@ -1,11 +1,11 @@
-[03:22:15] [Test worker/INFO]: MCMT thread pool started with parallelism 4
-[03:22:15] [Test worker/INFO]: MCMT thread pool started with parallelism 4
-[03:22:15] [Test worker/INFO]: MCMT thread pool started with parallelism 4
-[03:22:15] [Test worker/INFO]: MCMT thread pool started with parallelism 4
-[03:22:15] [MCMT-Pool-Thread-0/ERROR]: MCMT parallel task failed: boom
+[04:22:36] [Test worker/INFO]: MCMT thread pool started with parallelism 4
+[04:22:36] [Test worker/INFO]: MCMT thread pool started with parallelism 4
+[04:22:36] [Test worker/INFO]: MCMT thread pool started with parallelism 4
+[04:22:36] [Test worker/INFO]: MCMT thread pool started with parallelism 4
+[04:22:36] [MCMT-Pool-Thread-0/ERROR]: MCMT parallel task failed: boom
 java.lang.IllegalStateException: boom
 	at org.jmt.mcmt.ParallelProcessorTest.lambda$taskExceptionIsRethrownAtPostTick$3(ParallelProcessorTest.java:53) ~[test/:?]
-	at org.jmt.mcmt.ParallelProcessor.lambda$submit$2(ParallelProcessor.java:166) ~[main/:?]
+	at org.jmt.mcmt.ParallelProcessor.lambda$submit$2(ParallelProcessor.java:171) ~[main/:?]
 	at java.base/java.util.concurrent.ForkJoinTask$RunnableExecuteAction.exec(ForkJoinTask.java:1423) [?:?]
 	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387) [?:?]
 	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1312) [?:?]

@@ -24,7 +24,7 @@ spawn-protection=0
 max-tick-time=60000
 level-seed=mcmt-smoke
 level-type=minecraft\:flat
-generator-settings={"layers"\:[{"block"\:"minecraft\:bedrock","height"\:1},{"block"\:"minecraft\:stone","height"\:62},{"block"\:"minecraft\:grass_block","height"\:1}],"biome"\:"minecraft\:plains"}
+generator-settings={"layers"\:[{"block"\:"minecraft\:bedrock","height"\:1},{"block"\:"minecraft\:stone","height"\:126},{"block"\:"minecraft\:grass_block","height"\:1}],"biome"\:"minecraft\:plains"}
 generate-structures=false
 sync-chunk-writes=false
 "@
@@ -90,4 +90,9 @@ if ($bad) {
 if (-not (Select-String -Path $Stdout -Pattern 'MCMT is currently' -Quiet)) { Fail '/mcmt config state produced no output' }
 if (-not (Select-String -Path $Stdout -Pattern 'Current max threads' -Quiet)) { Fail '/mcmt stats produced no output' }
 if (-not (Select-String -Path $Stdout -Pattern 'MCMT thread pool started' -Quiet)) { Fail 'thread pool was never started' }
+$tasks = (Select-String -Path $Stdout -Pattern 'Parallel tasks since start: World:(\d+) Entity:(\d+) TE:(\d+) Env:(\d+)' | Select-Object -Last 1)
+if (-not $tasks) { Fail 'no task counters in output' }
+Add-Content $Report $tasks.Matches[0].Value
+if ([int]$tasks.Matches[0].Groups[1].Value -le 0) { Fail 'no level ticks ran on the worker pool' }
+if ([int]$tasks.Matches[0].Groups[2].Value -le 0) { Fail 'no entity ticks ran on the worker pool' }
 Add-Content $Report 'PASS'; Write-Host 'PASS'

@@ -10,4 +10,14 @@
 - `/mcmt debug test structures` removed (the API it used no longer exists).
 - `/mcmt config temanage list` now prints the lists instead of "NYI".
 - Fixed `SerDesRegistry.initLookup` never populating the shared whitelist.
-- Phase 1: no parallel hooks active yet.
+- Phase 2: level ticks and entity ticks run on the worker pool (Mixins on
+  `MinecraftServer.tickChildren` and `ServerLevel.tickNonPassenger`); MCMT
+  worker threads count as the server thread for task scheduling.
+- Concurrent chunk cache in front of `ServerChunkCache.getChunk/getChunkNow`
+  for worker threads (replaces the 1.18 `ParaServerChunkProvider`).
+- Thread-safe replacements for the entity storage collections
+  (`ClassInstanceMultiMap`, `EntitySectionStorage`, `EntityLookup`,
+  `PersistentEntitySectionManager`, `ChunkMap.entityMap`, `EntityTickList`)
+  and for `Level.random`, replacing the `sync-fu` fastutil transformer.
+- `/mcmt stats` prints cumulative parallel task counts.
+- Block entity and environment ticks are still sequential (phase 3).

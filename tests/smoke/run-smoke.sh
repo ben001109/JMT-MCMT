@@ -23,7 +23,7 @@ spawn-protection=0
 max-tick-time=60000
 level-seed=mcmt-smoke
 level-type=minecraft\\:flat
-generator-settings={"layers"\\:[{"block"\\:"minecraft\\:bedrock","height"\\:1},{"block"\\:"minecraft\\:stone","height"\\:62},{"block"\\:"minecraft\\:grass_block","height"\\:1}],"biome"\\:"minecraft\\:plains"}
+generator-settings={"layers"\\:[{"block"\\:"minecraft\\:bedrock","height"\\:1},{"block"\\:"minecraft\\:stone","height"\\:126},{"block"\\:"minecraft\\:grass_block","height"\\:1}],"biome"\\:"minecraft\\:plains"}
 generate-structures=false
 sync-chunk-writes=false
 EOF
@@ -80,4 +80,9 @@ fi
 grep -q 'MCMT is currently' "$STDOUT" || fail "/mcmt config state produced no output"
 grep -q 'Current max threads' "$STDOUT" || fail "/mcmt stats produced no output"
 grep -q 'MCMT thread pool started' "$STDOUT" || fail "thread pool was never started"
+TASKS="$(grep -o 'Parallel tasks since start: World:[0-9]* Entity:[0-9]* TE:[0-9]* Env:[0-9]*' "$STDOUT" | tail -1)"
+echo "$TASKS" >> "$REPORT"
+WORLDS="$(echo "$TASKS" | sed -E 's/.*World:([0-9]+).*//')"; ENTS="$(echo "$TASKS" | sed -E 's/.*Entity:([0-9]+).*//')"
+[ "${WORLDS:-0}" -gt 0 ] || fail "no level ticks ran on the worker pool"
+[ "${ENTS:-0}" -gt 0 ] || fail "no entity ticks ran on the worker pool"
 echo "PASS" | tee -a "$REPORT"

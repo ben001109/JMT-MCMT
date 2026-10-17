@@ -2618,3 +2618,20 @@ git push origin 1.21.1
 - Section 4.4 platform: Task 2.
 - Section 7 tests: Tasks 3, 4, 5, 6 (unit), 11 (smoke), 12 (CI).
 - Section 10 phase 1 exit criteria: Task 11 step 6 and Task 12 step 3.
+
+### Recorded during phase 1/2 execution (2026-10-18)
+
+- Gradle 8.14 instead of 8.10: fabric-loom 1.9 requires Gradle 8.11+.
+- `javax.annotation` replaced by `org.jetbrains.annotations` (absent on Fabric).
+- `common` tests need `neoForge.addModdingDependenciesTo(sourceSets.test)`.
+- `SynchronisePlugin` keys on the marker Mixin class name, never on method names, because
+  runtime names differ between loaders (intermediary on Fabric).
+- Scope change: the chunk cache (`ServerChunkCacheMixin`) and the entity-storage collection
+  replacements planned for phase 4 were required as soon as entity ticks ran in parallel, so they
+  shipped with phase 2. Phase 4 keeps the remaining `sync-fu` targets (DistanceManager,
+  StructureTemplateManager, ChunkMap chunk maps) and the chunk-timeout debug hooks.
+- `PersistentEntitySectionManager` passes `this.chunkVisibility::get` to `EntitySectionStorage`;
+  swapping the map field requires re-pointing that function (`EntitySectionStorageAccess`).
+- `Level.random` is a `LegacyRandomSource` guarded by `ThreadingDetector`; replaced with
+  `RandomSource.createThreadSafe()`.
+- Smoke test flat world: layer heights must sum to 128 for a surface at y=64 (world bottom is -64).

@@ -13,7 +13,14 @@ repeat 50 execute positioned -5 66 -5 run summon minecraft:item ~ ~ ~ {Item:{id:
 setblock 2 65 2 minecraft:hopper
 setblock 3 65 2 minecraft:furnace
 setblock 4 65 2 minecraft:chest
+execute if entity @e[type=minecraft:zombie]
+execute if entity @e[type=minecraft:item]
+data get entity @e[type=minecraft:zombie,limit=1] Pos
+data get entity @e[type=minecraft:item,limit=1] Age
 sleep 120
+execute if entity @e[type=minecraft:zombie]
+data get entity @e[type=minecraft:zombie,limit=1] Pos
+data get entity @e[type=minecraft:item,limit=1] Age
 mcmt stats
 mcmt config state
 stop

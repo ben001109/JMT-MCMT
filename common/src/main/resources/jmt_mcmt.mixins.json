@@ -2,9 +2,22 @@
   "required": true,
   "minVersion": "0.8",
   "package": "org.jmt.mcmt.mixin",
+  "plugin": "org.jmt.mcmt.mixin.SynchronisePlugin",
   "refmap": "${mod_id}.refmap.json",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [],
+  "mixins": [
+    "ClassInstanceMultiMapMixin",
+    "EntityLookupMixin",
+    "EntitySectionStorageMixin",
+    "EntityTickListMixin",
+    "LevelMixin",
+    "MinecraftServerMixin",
+    "PersistentEntitySectionManagerMixin",
+    "ChunkMapMixin",
+    "ServerChunkCacheInvoker",
+    "ServerChunkCacheMixin",
+    "ServerLevelMixin"
+  ],
   "server": [],
   "injectors": {
     "defaultRequire": 1

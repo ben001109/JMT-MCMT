@@ -1,6 +1,7 @@
 package org.jmt.mcmt.paralelised.fastutil;
 
 import java.util.Map;
+import java.util.function.LongFunction;
 import java.util.concurrent.ConcurrentHashMap;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
@@ -82,7 +83,18 @@ public class Long2ObjectConcurrentHashMap<V> implements Long2ObjectMap<V> {
 	@Override
 	public V put(Long key, V value) {
 		V out = backing.put(key, value);
-		return (out == null && !backing.containsKey(key)) ? defaultReturn : backing.put(key, value);
+		return out == null ? defaultReturn : out;
+	}
+
+	/** Atomic, unlike the interface default which does get-then-put. */
+	@Override
+	public V computeIfAbsent(long key, LongFunction<? extends V> mappingFunction) {
+		return backing.computeIfAbsent(key, k -> mappingFunction.apply(k));
+	}
+
+	@Override
+	public V computeIfAbsent(long key, it.unimi.dsi.fastutil.longs.Long2ObjectFunction<? extends V> mappingFunction) {
+		return backing.computeIfAbsent(key, k -> mappingFunction.get(k.longValue()));
 	}
 	
 	@Override

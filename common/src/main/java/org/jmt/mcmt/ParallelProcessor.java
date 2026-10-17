@@ -54,6 +54,11 @@ public final class ParallelProcessor {
 	public static final AtomicInteger currentTEs = new AtomicInteger();
 	public static final AtomicInteger currentEnvs = new AtomicInteger();
 	public static final Set<String> currentTasks = ConcurrentHashMap.newKeySet();
+	// Cumulative counts of tasks actually executed on the pool, for /mcmt stats and the smoke tests.
+	public static final java.util.concurrent.atomic.AtomicLong totalWorlds = new java.util.concurrent.atomic.AtomicLong();
+	public static final java.util.concurrent.atomic.AtomicLong totalEnts = new java.util.concurrent.atomic.AtomicLong();
+	public static final java.util.concurrent.atomic.AtomicLong totalTEs = new java.util.concurrent.atomic.AtomicLong();
+	public static final java.util.concurrent.atomic.AtomicLong totalEnvs = new java.util.concurrent.atomic.AtomicLong();
 
 	public static synchronized void setupThreadpool(int parallelism) {
 		ExecutorService old = executor;
@@ -184,6 +189,7 @@ public final class ParallelProcessor {
 		}
 		submit("WorldTick: " + level.dimension().location(), () -> {
 			currentWorlds.incrementAndGet();
+			totalWorlds.incrementAndGet();
 			try {
 				level.tick(hasTimeLeft);
 				if (MCMTConfig.disableWorldPostTick) {
@@ -204,6 +210,7 @@ public final class ParallelProcessor {
 		}
 		submit("EntityTick: " + entity.getType() + "@" + entity.getId(), () -> {
 			currentEnts.incrementAndGet();
+			totalEnts.incrementAndGet();
 			try {
 				ISerDesFilter filter = SerDesRegistry.getFilter(SerDesHookTypes.EntityTick, entity.getClass());
 				if (filter != null) {
@@ -224,6 +231,7 @@ public final class ParallelProcessor {
 		}
 		submit("TETick: " + ticker.getType() + "@" + ticker.getPos(), () -> {
 			currentTEs.incrementAndGet();
+			totalTEs.incrementAndGet();
 			try {
 				ISerDesFilter filter = SerDesRegistry.getFilter(SerDesHookTypes.TETick, ticker.getClass());
 				if (filter != null) {
@@ -244,6 +252,7 @@ public final class ParallelProcessor {
 		}
 		submit("EnvTick: " + chunk.getPos(), () -> {
 			currentEnvs.incrementAndGet();
+			totalEnvs.incrementAndGet();
 			try {
 				level.tickChunk(chunk, randomTickSpeed);
 			} finally {
