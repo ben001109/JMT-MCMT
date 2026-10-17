@@ -1,0 +1,46 @@
+name: Release (1.21.1)
+
+on:
+  push:
+    tags: ['v*-1.21.1']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: tests/smoke/bot/package-lock.json
+      - name: Unit tests
+        run: ./gradlew :common:test --no-daemon
+      - name: Build jars
+        run: ./gradlew buildAll --no-daemon
+      - name: Smoke test Fabric
+        run: bash tests/smoke/run-smoke.sh fabric 60
+      - name: Smoke test NeoForge
+        run: bash tests/smoke/run-smoke.sh neoforge 60
+      - name: Collect release files
+        run: |
+          mkdir -p release
+          VERSION="${GITHUB_REF_NAME#v}"
+          cp fabric/build/libs/jmt_mcmt-fabric-*[0-9].jar "release/jmt_mcmt-1.21.1-fabric-${VERSION%-1.21.1}.jar"
+          cp neoforge/build/libs/jmt_mcmt-neoforge-*[0-9].jar "release/jmt_mcmt-1.21.1-neoforge-${VERSION%-1.21.1}.jar"
+          ls -la release
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release/*.jar
+          generate_release_notes: true
+          body_path: CHANGELOG.md

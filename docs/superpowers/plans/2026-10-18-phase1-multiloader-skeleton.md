@@ -2635,3 +2635,10 @@ git push origin 1.21.1
 - `Level.random` is a `LegacyRandomSource` guarded by `ThreadingDetector`; replaced with
   `RandomSource.createThreadSafe()`.
 - Smoke test flat world: layer heights must sum to 128 for a surface at y=64 (world bottom is -64).
+- Phase 4 added a mineflayer player bot to the smoke test (Node.js 22); environment ticks and
+  entity tracking need a connected player. Found and fixed: `CollectingNeighborUpdater` (now
+  per-thread), `PalettedContainer.get` null reads, `Entity.getInBlockState` cross-thread race,
+  `sendBlockUpdated` recursion guard, chunk ticket races.
+- Phase 5 deviation from spec section 8: the `1.21.1-<loader>` branches are generated snapshots
+  (one commit naming the source SHA, `tools/split-loader-branch.sh`) rather than
+  `git subtree split` history. Simpler, always builds standalone, and the branches are read-only.
