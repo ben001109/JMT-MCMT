@@ -29,3 +29,9 @@
 - Thread-safe `ChunkAccess.blockEntities`, `LevelChunk.tickersInLevel`,
   `ChunkHolder` change tracking, `LevelTicks` scheduling and
   `ServerLevel.onBlockStateChange`.
+- Phase 4 (found with a connected player): per-thread
+  `CollectingNeighborUpdater`, null-safe `PalettedContainer` reads under
+  concurrent writes, race-free `Entity.getInBlockState`, serialised
+  `ServerLevel.sendBlockUpdated` and chunk ticket changes.
+- Smoke test joins a mineflayer bot so environment ticks and entity tracking
+  are exercised; asserts task counters for all four hook kinds.

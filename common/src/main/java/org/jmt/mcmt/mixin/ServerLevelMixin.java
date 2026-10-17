@@ -35,6 +35,7 @@ public abstract class ServerLevelMixin {
 	@Shadow @Final @Mutable Set<Mob> navigatingMobs;
 
 	@Unique private final Object mcmt$blockEventLock = new Object();
+	@Unique private final Object mcmt$blockUpdateLock = new Object();
 
 	@Redirect(method = "tickNonPassenger",
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;tick()V"))
@@ -70,6 +71,17 @@ public abstract class ServerLevelMixin {
 	private void mcmt$onBlockStateChange(BlockPos pos, BlockState oldState, BlockState newState, Operation<Void> original) {
 		synchronized (mcmt$blockEventLock) {
 			original.call(pos, oldState, newState);
+		}
+	}
+
+	/**
+	 * Guarded by a recursion flag in vanilla ("recursive call to sendBlockUpdated"), which
+	 * concurrent callers would trip. It also walks {@code navigatingMobs}; serialise it.
+	 */
+	@WrapMethod(method = "sendBlockUpdated")
+	private void mcmt$sendBlockUpdated(BlockPos pos, BlockState oldState, BlockState newState, int flags, Operation<Void> original) {
+		synchronized (mcmt$blockUpdateLock) {
+			original.call(pos, oldState, newState, flags);
 		}
 	}
 

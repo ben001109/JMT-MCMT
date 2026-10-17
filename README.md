@@ -18,19 +18,19 @@ required.
 
 ## Status
 
-Phase 3 complete: level, entity, block entity and environment ticks run on the
-MCMT worker pool on both loaders, with the concurrent chunk cache and
-thread-safe entity/block-entity storage in place. The headless smoke test
-(200 entities plus block entities, 60 s) passes on Fabric and NeoForge.
-Environment ticks only run near players, so they are not exercised headless yet.
+Phase 4 complete: level, entity, block entity and environment ticks run on the
+MCMT worker pool on both loaders. The smoke test runs a headless dedicated
+server with a real protocol bot (mineflayer) connected, 200 entities, block
+entities, farmland under a raised random tick speed and a thunderstorm, for
+60 s, and passes on Fabric and NeoForge with zero errors.
 
-Known limitations at this stage: only tested headless with no players; mod
-compatibility untested.
+Known limitations at this stage: one player only, vanilla only; mod
+compatibility and multi-player load are untested.
 
 ## Tests
 
     ./gradlew :common:test
-    bash tests/smoke/run-smoke.sh fabric 120
+    bash tests/smoke/run-smoke.sh fabric 120      # needs Node.js 18+ for the player bot
     bash tests/smoke/run-smoke.sh neoforge 120
 
 ## Licence

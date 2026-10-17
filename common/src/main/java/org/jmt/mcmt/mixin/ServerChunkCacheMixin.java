@@ -18,6 +18,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.TicketType;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -114,6 +115,30 @@ public abstract class ServerChunkCacheMixin {
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;tickChunk(Lnet/minecraft/world/level/chunk/LevelChunk;I)V"))
 	private void mcmt$tickChunk(ServerLevel level, LevelChunk chunk, int randomTickSpeed) {
 		ParallelProcessor.callTickEnvironment(level, chunk, randomTickSpeed);
+	}
+
+	// Ticket changes can come from worker threads (teleports, portals, forced chunks) and must not
+	// race the distance manager work inside the chunk source tick.
+
+	@WrapMethod(method = "addRegionTicket(Lnet/minecraft/server/level/TicketType;Lnet/minecraft/world/level/ChunkPos;ILjava/lang/Object;)V")
+	private <T> void mcmt$addRegionTicket(TicketType<T> type, ChunkPos pos, int distance, T value, Operation<Void> original) {
+		synchronized (this) {
+			original.call(type, pos, distance, value);
+		}
+	}
+
+	@WrapMethod(method = "removeRegionTicket(Lnet/minecraft/server/level/TicketType;Lnet/minecraft/world/level/ChunkPos;ILjava/lang/Object;)V")
+	private <T> void mcmt$removeRegionTicket(TicketType<T> type, ChunkPos pos, int distance, T value, Operation<Void> original) {
+		synchronized (this) {
+			original.call(type, pos, distance, value);
+		}
+	}
+
+	@WrapMethod(method = "updateChunkForced")
+	private void mcmt$updateChunkForced(ChunkPos pos, boolean forced, Operation<Void> original) {
+		synchronized (this) {
+			original.call(pos, forced);
+		}
 	}
 
 	/** The chunk source tick is serialised against worker-thread chunk loads (1.18 {@code SCPTick}). */

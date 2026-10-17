@@ -1,0 +1,13 @@
+{
+  "name": "mcmt-smoke-bot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Minimal Minecraft protocol bot that joins the MCMT smoke-test server so player-dependent code paths (environment ticks, entity tracking) are exercised.",
+  "type": "module",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "dependencies": {
+    "mineflayer": "4.39.0"
+  }
+}

@@ -20,3 +20,4 @@ tests/smoke/work/
 .DS_Store
 Thumbs.db
 logs/
+tests/smoke/bot/node_modules/

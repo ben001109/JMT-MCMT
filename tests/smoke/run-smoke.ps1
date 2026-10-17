@@ -61,6 +61,20 @@ while ((Get-Date) -lt $deadline) {
 if (-not (Select-String -Path $Stdout -Pattern 'Done \(' -Quiet)) { Fail 'server did not reach Done within 600s' }
 Add-Content $Report 'server started'
 
+# Player bot: environment ticks and entity tracking only run with a player nearby.
+$BotDir = Join-Path $Root 'tests\smoke\bot'
+if (-not (Test-Path (Join-Path $BotDir 'node_modules'))) { Push-Location $BotDir; npm ci --no-audit --no-fund --silent; Pop-Location }
+$BotLog = Join-Path $Out "$Loader-bot.log"
+$bot = Start-Process -FilePath 'node' -ArgumentList @('bot.js', '--host', '127.0.0.1', '--port', '25565', '--seconds', "$($TickSeconds + 3)", '--name', 'MCMTBot') -WorkingDirectory $BotDir -RedirectStandardOutput $BotLog -RedirectStandardError (Join-Path $Out "$Loader-bot.err") -PassThru -NoNewWindow
+$deadline = (Get-Date).AddSeconds(90)
+while ((Get-Date) -lt $deadline) {
+  if (Select-String -Path $Stdout -Pattern 'MCMTBot joined the game' -Quiet) { break }
+  if ($bot.HasExited) { Fail 'bot process exited before joining' }
+  Start-Sleep 1
+}
+if (-not (Select-String -Path $Stdout -Pattern 'MCMTBot joined the game' -Quiet)) { Fail 'bot did not join within 90s' }
+Add-Content $Report 'bot joined'
+
 function Send($cmd) { $script:p.StandardInput.WriteLine($cmd); $script:p.StandardInput.Flush() }
 foreach ($line in Get-Content (Join-Path $Root 'tests\smoke\commands.txt')) {
   if ([string]::IsNullOrWhiteSpace($line) -or $line.StartsWith('#')) { continue }
@@ -76,6 +90,11 @@ if (-not $script:p.WaitForExit(90000)) { Fail 'server did not stop within 90s af
 Start-Sleep 1
 Add-Content $Report 'server stopped cleanly'
 $sw.Close()
+if (-not $bot.WaitForExit(30000)) { $bot.Kill() }
+if (-not (Select-String -Path $BotLog -Pattern 'spawned at' -Quiet)) { Fail 'bot never spawned' }
+if (Select-String -Path $BotLog -Pattern 'kicked:|error:' -Quiet) { Fail 'bot was kicked or errored' }
+if (-not (Select-String -Path $Stdout -Pattern 'MCMTBot left the game' -Quiet)) { Fail 'bot did not leave cleanly' }
+Add-Content $Report 'bot stayed connected'
 
 $allow = Get-Content (Join-Path $Root 'tests\smoke\allowlist.txt') | Where-Object { $_ -and -not $_.StartsWith('#') }
 $filtered = Get-Content $Stdout | Where-Object { $l = $_; -not ($allow | Where-Object { $l -match $_ }) }
@@ -96,4 +115,5 @@ Add-Content $Report $tasks.Matches[0].Value
 if ([int]$tasks.Matches[0].Groups[1].Value -le 0) { Fail 'no level ticks ran on the worker pool' }
 if ([int]$tasks.Matches[0].Groups[2].Value -le 0) { Fail 'no entity ticks ran on the worker pool' }
 if ([int]$tasks.Matches[0].Groups[3].Value -le 0) { Fail 'no block entity ticks ran on the worker pool' }
+if ([int]$tasks.Matches[0].Groups[4].Value -le 0) { Fail 'no environment ticks ran on the worker pool' }
 Add-Content $Report 'PASS'; Write-Host 'PASS'
