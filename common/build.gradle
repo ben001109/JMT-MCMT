@@ -5,6 +5,8 @@ plugins {
 
 neoForge {
     neoFormVersion = neo_form_version
+    // Unit tests reference vanilla classes (BlockPos, ChunkPos, ...).
+    addModdingDependenciesTo(sourceSets.test)
 }
 
 dependencies {
