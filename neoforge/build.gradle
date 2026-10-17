@@ -17,3 +17,6 @@ neoForge {
         }
     }
 }
+
+// Smoke tests feed console commands over stdin.
+tasks.named('runServer') { standardInput = System.in }
