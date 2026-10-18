@@ -24,6 +24,7 @@ public class MCMTFabric implements ModInitializer {
 		MCMTCommon.init(store);
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> ConfigCommand.register(dispatcher));
 		ServerLifecycleEvents.SERVER_STARTING.register(MCMTCommon::onServerStarting);
+		ServerLifecycleEvents.SERVER_STARTED.register(MCMTCommon::onServerStarted);
 		ServerLifecycleEvents.SERVER_STOPPED.register(MCMTCommon::onServerStopped);
 	}
 

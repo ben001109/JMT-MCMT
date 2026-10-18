@@ -11,6 +11,7 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 
@@ -25,6 +26,7 @@ public class MCMTNeoForge {
 		modBus.addListener(this::onConfig);
 		NeoForge.EVENT_BUS.addListener(this::onRegisterCommands);
 		NeoForge.EVENT_BUS.addListener(this::onServerStarting);
+		NeoForge.EVENT_BUS.addListener(this::onServerStarted);
 		NeoForge.EVENT_BUS.addListener(this::onServerStopped);
 	}
 
@@ -40,6 +42,10 @@ public class MCMTNeoForge {
 
 	private void onServerStarting(ServerStartingEvent event) {
 		MCMTCommon.onServerStarting(event.getServer());
+	}
+
+	private void onServerStarted(ServerStartedEvent event) {
+		MCMTCommon.onServerStarted(event.getServer());
 	}
 
 	private void onServerStopped(ServerStoppedEvent event) {

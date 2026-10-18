@@ -1,5 +1,6 @@
 package org.jmt.mcmt;
 
+import org.jmt.mcmt.autotest.AutoTest;
 import org.jmt.mcmt.commands.StatsCommand;
 import org.jmt.mcmt.config.ConfigStore;
 import org.jmt.mcmt.config.MCMTConfig;
@@ -39,6 +40,11 @@ public final class MCMTCommon {
 		StatsCommand.setServer(server);
 		StatsCommand.resetAll();
 		ParallelProcessor.setupThreadpool(MCMTConfig.getParallelism());
+	}
+
+	/** After the server has finished starting (worlds loaded). */
+	public static void onServerStarted(MinecraftServer server) {
+		AutoTest.onServerStarted(server);
 	}
 
 	public static void onServerStopped(MinecraftServer server) {

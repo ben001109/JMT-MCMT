@@ -21,3 +21,5 @@ tests/smoke/work/
 Thumbs.db
 logs/
 tests/smoke/bot/node_modules/
+tests/client/out/
+tests/client/work/
