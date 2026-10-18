@@ -1,0 +1,32 @@
+# One console command per line. Directives:
+#   sleep N          wait N seconds (the "sleep 120" line is replaced by the script's tick-seconds argument)
+#   repeat N <cmd>   send <cmd> N times
+# The smoke world is a flat world with its surface at y=64.
+gamemode creative MCMTBot
+tp MCMTBot 0 66 0
+gamerule doMobSpawning false
+gamerule randomTickSpeed 30
+weather thunder 600
+forceload add -40 -40 40 40
+sleep 5
+mcmt config state
+mcmt stats toggle
+repeat 100 execute positioned 0 66 0 run summon minecraft:zombie ~ ~ ~ {PersistenceRequired:1b}
+repeat 50 execute positioned 5 66 5 run summon minecraft:cow ~ ~ ~
+repeat 50 execute positioned -5 66 -5 run summon minecraft:item ~ ~ ~ {Item:{id:"minecraft:stone",count:1}}
+setblock 2 65 2 minecraft:hopper
+setblock 3 65 2 minecraft:furnace
+setblock 4 65 2 minecraft:chest
+fill -8 65 -8 8 65 8 minecraft:wheat replace minecraft:air
+fill -8 64 -8 8 64 8 minecraft:farmland
+execute if entity @e[type=minecraft:zombie]
+execute if entity @e[type=minecraft:item]
+data get entity @e[type=minecraft:zombie,limit=1] Pos
+data get entity @e[type=minecraft:item,limit=1] Age
+sleep 120
+execute if entity @e[type=minecraft:zombie]
+data get entity @e[type=minecraft:zombie,limit=1] Pos
+data get entity @e[type=minecraft:item,limit=1] Age
+mcmt stats
+mcmt config state
+stop

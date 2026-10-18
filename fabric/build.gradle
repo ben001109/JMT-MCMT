@@ -1,0 +1,41 @@
+plugins {
+    id 'multiloader-loader'
+    id 'fabric-loom'
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+
+    implementation "com.electronwill.night-config:core:${nightconfig_version}"
+    implementation "com.electronwill.night-config:toml:${nightconfig_version}"
+    include "com.electronwill.night-config:core:${nightconfig_version}"
+    include "com.electronwill.night-config:toml:${nightconfig_version}"
+}
+
+loom {
+    mixin {
+        defaultRefmapName.set("${mod_id}.refmap.json")
+    }
+    runs {
+        client {
+            client()
+            setConfigName('Fabric Client')
+            ideConfigGenerated(true)
+            runDir('runs/client')
+            if (project.hasProperty('mcmtWorld')) programArgs('--quickPlaySingleplayer', project.property('mcmtWorld').toString())
+            if (project.hasProperty('mcmtAutotest')) vmArg("-Dmcmt.autotest=${project.property('mcmtAutotest')}")
+        }
+        server {
+            server()
+            setConfigName('Fabric Server')
+            ideConfigGenerated(true)
+            runDir('runs/server')
+        }
+    }
+}
+
+// Smoke tests feed console commands over stdin.
+tasks.named('runServer') { standardInput = System.in }

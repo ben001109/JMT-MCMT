@@ -1,0 +1,10 @@
+# Regexes for client log lines that look like errors but are harmless in an offline dev client.
+# Filled from observed runs; every entry should say why it is harmless.
+# Offline account: no Mojang session, telemetry or realms
+Failed to fetch user properties
+Failed to verify authentication
+Telemetry
+[Rr]ealms
+YggdrasilUserApiService
+# MCMT's own periodic notice
+MCMT is installed; error logs are likely invalid
