@@ -1,0 +1,12 @@
+# Regexes (one per line) for log lines that contain error-like words but are harmless.
+# Mojang API lookups fail offline
+Failed to verify username
+Authentication servers are down
+# Mixin refmap warning in dev runs
+Reference map .* could not be read
+# MCMT's own periodic notice
+MCMT is installed; error logs are likely invalid
+# Gradle/loader noise
+ErrorProne
+errorprone
+Unable to get a TLS certificate

@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "org.jmt.mcmt.neoforge.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "NeoForgeMinecraftServerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

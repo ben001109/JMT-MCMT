@@ -1,0 +1,25 @@
+# Gradle
+.gradle/
+build/
+buildSrc/.gradle/
+buildSrc/build/
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+bin/
+# Runs
+runs/
+run/
+tests/smoke/out/
+tests/smoke/work/
+# OS
+.DS_Store
+Thumbs.db
+logs/
+tests/smoke/bot/node_modules/
+tests/client/out/
+tests/client/work/

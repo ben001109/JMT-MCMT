@@ -1,0 +1,11 @@
+plugins {
+    id 'fabric-loom' version '1.9-SNAPSHOT' apply false
+    id 'net.neoforged.moddev' version '2.0.148' apply false
+}
+
+// Build both loader jars with a single task.
+tasks.register('buildAll') {
+    group = 'build'
+    description = 'Builds the Fabric and NeoForge jars'
+    dependsOn(':neoforge:build')
+}

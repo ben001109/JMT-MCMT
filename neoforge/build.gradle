@@ -1,0 +1,28 @@
+plugins {
+    id 'multiloader-loader'
+    id 'net.neoforged.moddev'
+}
+
+neoForge {
+    version = neoforge_version
+    runs {
+        client {
+            client()
+            gameDirectory = project.file('runs/client')
+            if (project.hasProperty('mcmtWorld')) programArguments.addAll('--quickPlaySingleplayer', project.property('mcmtWorld').toString())
+            if (project.hasProperty('mcmtAutotest')) systemProperty('mcmt.autotest', project.property('mcmtAutotest').toString())
+        }
+        server {
+            server()
+            gameDirectory = project.file('runs/server')
+        }
+    }
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+// Smoke tests feed console commands over stdin.
+tasks.named('runServer') { standardInput = System.in }
